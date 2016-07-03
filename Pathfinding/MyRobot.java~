@@ -1,0 +1,28 @@
+import java.awt.Point;
+import world.Robot;
+import world.World;
+
+
+public class MyRobot extends Robot{
+    @Override
+    public void travelToDestination () {
+	System.out.println(super.getPosition());
+	String response = super.pingMap(new Point(0, 0));
+	super.move(new Point(1, 1));
+	System.out.println(super.getPosition());
+    }
+
+    public static void main(String[] args){
+	try {
+	    World myWorld = new World ("./TestCases/myInputFile1.txt", false );
+	    MyRobot myRobot = new MyRobot();
+	    myRobot.addToWorld(myWorld);
+	    //System.out.println(myWorld.getStartPos());
+	    myRobot.travelToDestination();
+	    //System.out.println(myWorld.getEndPos());
+	}
+	catch ( Exception e) {
+	    e.printStackTrace () ;
+	}
+    }
+}
