@@ -1,0 +1,123 @@
+# Assignment Globals
+GOAL_STATE = (3,6)
+WIND = 0 # takes values 0, 1, 2 for the three cases in the assignment description
+gamma = 1 # discount value
+epsilon = 0.001
+MAX_ITERS = 1000
+
+# Actions
+STAY = u"\u2022"
+North = u"\u2191"
+South = u"\u2193"
+East = u"\u2192"
+West = u"\u2190"
+NW = u"\u2196"
+NE = u"\u2197"
+SW = u"\u2199"
+SE = u"\u2198"
+A = [STAY, North, South, East, West, NW, NE, SW, SE]
+
+dir_matrix = [[STAY for x in range(7)] for x in range(7)] 
+value_matrix = [[0 for x in range(7)] for x in range(7)] 
+
+# Reward function
+def R(s):
+    if s[0] == 3 and s[1] == 6:
+        return 0
+    else:
+        return -1
+
+# Transition function
+def T(s,a):
+    if a == North:
+        if s[0] > 0:
+            s = (s[0]-1,s[1])
+    elif a == South:
+        if s[0] < 6:
+            s = (s[0]+1,s[1])
+    elif a == East:
+        if s[1] < 6:
+            s = (s[0],s[1]+1)
+    elif a == West:
+        if s[1] > 0:
+            s = (s[0],s[1]-1)
+    elif a == NE:
+        # corner -> stay
+        if s[0] == 0 and s[1] == 6:
+            return s
+        # against north wall -> move east
+        elif s[0] == 0:
+            s = (s[0],s[1]+1)
+        # against east wall -> move north
+        elif s[1] == 6:
+            s = (s[0]-1,s[1])
+        # anywhere else -> s = (i-1, j+1)
+        else:
+            s = (s[0]-1,s[1]+1)
+    elif a == NW:
+        # corner -> stay
+        if s[0] == 0 and s[1] == 0:
+            return s
+        # against north wall -> move west
+        elif s[0] == 0:
+            s = (s[0],s[1]-1)
+        # against west wall -> move north
+        elif s[1] == 0:
+            s = (s[0]-1,s[1])
+        # anywhere else -> s = (i-1, j-1)
+        else:
+            s = (s[0]-1,s[1]-1)
+    elif a == SE:
+        # corner -> stay
+        if s[0] == 6 and s[1] == 6:
+            return s
+        # against south wall -> move east
+        elif s[0] == 6:
+            s = (s[0],s[1]+1)
+        # against east wall -> move south
+        elif s[1] == 6:
+            s = (s[0]+1,s[1])
+        # anywhere else -> s = (i+1, j+1)
+        else:
+            s = (s[0]+1,s[1]+1)
+    elif a == SW:
+        # corner -> stay
+        if s[0] == 6 and s[1] == 0:
+            return s
+        # against south wall -> move west
+        elif s[0] == 6:
+            s = (s[0],s[1]-1)
+        # against west wall -> move south
+        elif s[1] == 0:
+            s = (s[0]+1,s[1])
+        # anywhere else -> s = (i+1, j-1)
+        else:
+            s = (s[0]+1,s[1]-1)
+    return s
+
+# initialize U'
+u = [[0 for x in range(7)] for x in range(7)] 
+iters = 0
+while iters <= MAX_ITERS:
+    iters += 1
+    delta = 0
+    values_matrix = u
+    for i in range(7):
+        for j in range(7):
+            s = (i,j)
+            summed_utility_with_max_a = -999999999
+            for a in A:
+                s_primes = # get the possible new states given s,a
+                potential_sum = 0
+                for s_prime in s_primes:
+                    potential_sum += values_matrix[s_prime]
+                if summed_utility_with_max_a < potential_sum:
+                    summed_utility_with_max_a = potential_sum
+            u = R(s) + 
+            if u[i][j]-values_matrix[i][j] > delta:
+                delta = u[i][j]-values_matrix[i][j]
+    if delta < epsilon:
+        break
+
+for k in range(7):
+    print(value_matrix[k])
