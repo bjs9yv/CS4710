@@ -1,0 +1,8 @@
+args = commandArgs(trailingOnly=TRUE)
+training <- read.csv(args[1], header=TRUE)
+vars <- as.numeric(args[3])
+xnam <- paste("x", 0:vars, sep="")
+(fmla <- as.formula(paste("cuisine ~ ", paste(xnam, collapse= "+"))))
+fit <- suppressWarnings(glm(fmla, data = training))
+sink(args[2])
+print(cat(coef(fit),sep="\n"))
